@@ -1407,3 +1407,89 @@ def set_plotting_style():
     sns.set_style('darkgrid', rc=rc)
     sns.set_palette("colorblind", color_codes=True)
     sns.set_context('notebook', rc=rc)
+
+
+# For Bokeh Styling.
+def bokeh_boiler(**kwargs):
+    # Make a bokeh figure axis.
+    if kwargs is not None:
+        p = bokeh.plotting.figure(**kwargs)
+    else:
+        p = bokeh.plotting.figure()
+        # Apply the styling to the figure axis.
+    p.background_fill_color='#E3DCD0'
+    p.grid.grid_line_color = '#FFFFFF'
+    p.grid.grid_line_dash = 'dotted'
+    p.grid.grid_line_width = 2
+    p.axis.minor_tick_line_color = None
+    p.axis.major_tick_line_color = None
+    p.axis.axis_line_color = None
+    p.axis.axis_label_text_font = 'Lucida Sans Unicode'
+    p.axis.major_label_text_font = 'Lucida Sans Unicode'
+    p.axis.axis_label_text_font_style = 'normal'
+    p.axis.axis_label_text_font_size = '13pt'
+    p.axis.major_label_text_font_size = '10pt'
+    p.axis.axis_label_text_color = '#3c3c3c'
+    p.axis.axis_label_standoff = 3
+    p.output_backend = 'svg'
+    return p
+
+def bokeh_to_pdf(p, fname):
+    bokeh.io.export_svgs(p, '._tmp.svg')
+    cairosvg.svg2pdf(url='./._tmp.svg', write_to=fname)
+    os.remove('./._tmp.svg')
+    print('Saved bokeh figure as {0}'.format(fname))
+
+
+# For bokeh image display. Shamelessly taken from Justin Bois.
+def bokeh_imshow(im, color_mapper=None, plot_height=400, length_units='pixels',
+                     interpixel_distance=1.0, return_glyph=False):
+        """
+        Display an image in a Bokeh figure.
+
+        Parameters
+        ----------
+        im : 2-dimensional Numpy array
+            Intensity image to be displayed.
+        color_mapper : bokeh.models.LinearColorMapper instance, default None
+            Mapping of intensity to color. Default is 256-level Viridis.
+        plot_height : int
+            Height of the plot in pixels. The width is scaled so that the
+            x and y distance between pixels is the same.
+        length_units : str, default 'pixels'
+            The units of length in the image.
+        interpixel_distance : float, default 1.0
+            Interpixel distance in units of `length_units`.
+        return_glyph : book, default False
+            If True, the image GlyphRenderer is also returned.
+
+        Returns
+        -------
+        output : bokeh.plotting.figure instance
+            Bokeh plot with image displayed.
+        """
+        # Get shape, dimensions
+        n, m = im.shape
+        dw = m * interpixel_distance
+        dh = n * interpixel_distance
+
+        # Set up figure with appropriate dimensions
+        plot_width = int(m/n * plot_height)
+        kwargs = {'plot_height': plot_height, 'plot_width': plot_width,
+                  'x_range': [0, dw], 'y_range': [0, dh],
+                  'x_axis_label': length_units, 'y_axis_label': length_units,
+                  'tools': 'pan, box_zoom, wheel_zoom, reset, resize'}
+        p = bokeh_boiler(**kwargs)
+
+        # Set color mapper; we'll do Viridis with 256 levels by default
+        if color_mapper is None:
+            color_mapper = bokeh.models.LinearColorMapper(bokeh.palettes.viridis(256))
+
+        # Display the image
+        im_bokeh = p.image(image=[im[::-1,:]], x=0, y=0, dw=dw, dh=dh,
+                           color_mapper=color_mapper)
+
+        if return_glyph is True:
+            return p, im_bokeh
+        else:
+            return p
