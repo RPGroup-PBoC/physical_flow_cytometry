@@ -1,0 +1,11 @@
+*.jpg
+*.pdf
+*.bbl
+*.aux
+*.log
+*.DS_store
+*.DS_Store
+*.swq
+*.~*
+*.*~
+*.ai
