@@ -161,6 +161,10 @@ import statsmodels.tools.numdiff as smnd # to comput the Hessian matrix
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import seaborn as sns
+import bokeh.io
+import bokeh.plotting
+import bokeh.models
+import cairosvg
 from fit_bivariate_gaussian_astroML import *
 
 
@@ -1431,7 +1435,7 @@ def bokeh_boiler(**kwargs):
     p.axis.major_label_text_font_size = '10pt'
     p.axis.axis_label_text_color = '#3c3c3c'
     p.axis.axis_label_standoff = 3
-    p.output_backend = 'svg'
+    # p.output_backend = 'svg'
     return p
 
 def bokeh_to_pdf(p, fname):
