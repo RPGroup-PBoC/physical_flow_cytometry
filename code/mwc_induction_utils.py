@@ -1414,28 +1414,44 @@ def set_plotting_style():
 
 
 # For Bokeh Styling.
-def bokeh_boiler(**kwargs):
+def bokeh_boiler(plot_width=600, plot_height=400, **kwargs):
     # Make a bokeh figure axis.
     if kwargs is not None:
-        p = bokeh.plotting.figure(**kwargs)
+        p = bokeh.plotting.figure(plot_width=plot_width,
+                                  plot_height=plot_height,
+                                  **kwargs)
     else:
-        p = bokeh.plotting.figure()
-        # Apply the styling to the figure axis.
+        p = bokeh.plotting.figure(plot_width=plot_width,
+                                  plot_height=plot_height)
+
+    # Apply the styling to the figure axis.
     p.background_fill_color='#E3DCD0'
     p.grid.grid_line_color = '#FFFFFF'
     p.grid.grid_line_dash = 'dotted'
-    p.grid.grid_line_width = 2
+    p.grid.grid_line_width = 1.5
     p.axis.minor_tick_line_color = None
     p.axis.major_tick_line_color = None
     p.axis.axis_line_color = None
     p.axis.axis_label_text_font = 'Lucida Sans Unicode'
     p.axis.major_label_text_font = 'Lucida Sans Unicode'
+    p.title.background_fill_color = '#FFEDCE'
+    p.title.text_font = 'Lucida Sans Unicode'
+    p.title.text_font_style = 'normal'
+    p.title.align = 'center'
+    p.title.text_font_size = '1em'
+    p.title.border_line_color = '#FFEDCE'
+    p.title.border_line_width = 4
+    p.axis.axis_label_text_font_size = '1em'
     p.axis.axis_label_text_font_style = 'normal'
-    p.axis.axis_label_text_font_size = '13pt'
-    p.axis.major_label_text_font_size = '10pt'
     p.axis.axis_label_text_color = '#3c3c3c'
     p.axis.axis_label_standoff = 3
-    # p.output_backend = 'svg'
+    p.axis.major_label_text_font = 'Lucida Sans Unicode'
+    p.axis.major_label_text_font_size = '0.75em'
+
+    p.legend.border_line_color = '#FFFFFF'
+    p.legend.background_fill_color = '#E3DCD0'
+    p.legend.label_text_font = 'Lucida Sans Unicode'
+
     return p
 
 def bokeh_to_pdf(p, fname):
