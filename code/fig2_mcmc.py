@@ -6,13 +6,12 @@ import pymc3 as pm
 import theano.tensor as tt
 import matplotlib.gridspec as gridspec
 colors = flow.set_plotting_style()
-%matplotlib inline
-import imp
-imp.reload(flow)
+# %matplotlib inline
+
 ###########
 FIG_NO = 2
 ###########
-np.random.seed(666)
+np.random.seed(42)
 
 # Load the data sets.
 flow_master = pd.read_csv('../data/flow_master.csv', comment='#')
@@ -20,34 +19,38 @@ mic_master = pd.read_csv('../data/microscopy_master.csv', comment='#')
 
 # Only look at O1 and O2.
 mic_master = mic_master.loc[mic_master['operator'] != 'O3']
+
 flow_master = flow_master.loc[flow_master['operator'] != 'O3']
+
 
 # Narrow down the flow master to only three data sets.
 flow_pruned = []
 grouped = flow_master.groupby('operator')
+dates = {'O1': [20160825], 'O2': [20160807, 20160805, 20160809]}
 for g, d in grouped:
-    chosen_dates = np.random.choice(d['date'].unique(), 3)
-    print(g, chosen_dates)
-    for date in chosen_dates:
+    # chosen_dates = np.random.choice(d['date'].unique(), 3)
+    # print(g, len(d), chosen_dates)
+    for date in dates[g]:
         flow_pruned.append(d.loc[d['date'] == date])
 
+flow_master.groupby(['IPTG_uM', 'date', 'operator', 'rbs']).count()
 
 # Selected dates: O1 0825, 0823, 08, 27
 # Selected dates: O2 0812, 0810, 0809
 flow_date = pd.concat(flow_pruned, axis=0)
 
 #%% Remove the auto and delta.
-flow_pruned = flow_date.loc[flow_date['rbs'] == 'RBS1027']
-mic_pruned = mic_master.loc[mic_master['rbs'] == 'RBS1027']
+flow_samp = flow_date.loc[flow_date['rbs'] == 'RBS1027']
+mic_samp = mic_master.loc[mic_master['rbs'] == 'RBS1027']
 
 # Remove unnecessary columns
-flow_pruned = flow_pruned.loc[:, ['operator',
-                                  'binding_energy', 'IPTG_uM', 'fold_change_A']]
-flow_pruned.rename(columns={'fold_change_A': 'fold_change'}, inplace=True)
-flow_pruned.insert(0, 'method', 'flow')
-mic_pruned = mic_pruned.loc[:, ['operator',
-                                'binding_energy', 'IPTG_uM', 'fold_change']]
-mic_pruned.insert(0, 'method', 'microscopy')
+flow_samp = flow_samp.loc[:, ['operator',
+                              'binding_energy', 'IPTG_uM', 'fold_change_A']]
+flow_samp.rename(columns={'fold_change_A': 'fold_change'}, inplace=True)
+flow_samp.insert(0, 'method', 'flow')
+mic_samp = mic_samp.loc[:, ['operator',
+                            'binding_energy', 'IPTG_uM', 'fold_change']]
+mic_samp.insert(0, 'method', 'microscopy')
 
 
 # %% Set up the MCMC Running each data set separately..
@@ -65,15 +68,15 @@ with pm.Model() as flow_model:
     sigma = pm.HalfNormal('sigma', sd=10)
 
     # Define the expected values
-    iptg = flow_pruned['IPTG_uM'].values
-    ep_ra = flow_pruned['binding_energy'].values
+    iptg = flow_samp['IPTG_uM'].values
+    ep_ra = flow_samp['binding_energy'].values
 
     # Compute the probability of an active repressor
     mu = theano_fc(iptg, ep_a, ep_i, ep_ra)
 
     # Compute the likelihood.
     like = pm.Normal('like', mu=mu, sd=sigma,
-                     observed=flow_pruned['fold_change'].values, shape=2)
+                     observed=flow_samp['fold_change'].values, shape=2)
     flow_trace = pm.sample(draws=5000, tune=5000, njobs=4)
 
 
@@ -84,15 +87,15 @@ with pm.Model() as mic_model:
     sigma = pm.HalfNormal('sigma', sd=10)
 
     # Define the expected values
-    iptg = mic_pruned['IPTG_uM'].values
-    ep_ra = mic_pruned['binding_energy'].values
+    iptg = mic_samp['IPTG_uM'].values
+    ep_ra = mic_samp['binding_energy'].values
 
     # Compute the probability of an active repressor
     mu = theano_fc(iptg, ep_a, ep_i, ep_ra)
 
     # Compute the likelihood.
     like = pm.Normal('like', mu=mu, sd=sigma,
-                     observed=mic_pruned['fold_change'].values, shape=2)
+                     observed=mic_samp['fold_change'].values, shape=2)
     mic_trace = pm.sample(draws=5000, tune=5000, njobs=4)
 
 
@@ -139,27 +142,32 @@ mic_fit = foldchange(c, mic_epa, mic_epi, ep_ra)
 
 
 #%% Generate the plot
-fig = plt.figure(figsize=(120 / 25.4, 80 / 25.4))
+plt.close('all')
+fig = plt.figure(figsize=(100 / 25.4, 100 / 25.4))
 
 # Set the axes
-gs = gridspec.GridSpec(2, 3)
-ax1 = fig.add_subplot(gs[:, 0:2])
-ax2 = fig.add_subplot(gs[0, 2])
-ax3 = fig.add_subplot(gs[1, 2])
+gs = gridspec.GridSpec(3, 2)
+ax1 = fig.add_subplot(gs[0:2, :])
+ax2 = fig.add_subplot(gs[2, 0])
+ax3 = fig.add_subplot(gs[2, 1])
 
+# fig, ax = flow.subplots(1, 3)
+# ax1, ax2, ax3 = ax
 # Add labels
+ax2.set_yticks([])
+ax3.set_yticks([])
 ax1.set_xlabel('IPTG [M]')
 ax1.set_ylabel('fold-change')
 ax1.set_xscale('log')
-ax2.set_ylabel('$P\,(K_A\, |\, \mathrm{data})$')
+ax2.set_ylabel('$\propto P\,(K_A\, |\, \mathrm{data})$')
 ax2.set_xlabel('$K_A$ [µM]')
-ax3.set_ylabel('$P\,(K_I\, |\, \mathrm{data})$')
+ax3.set_ylabel('$\propto P\,(K_I\, |\, \mathrm{data})$')
 ax3.set_xlabel('$K_I$ [µM]')
 
 # Add panels
 fig.text(0, 0.95, '(A)', fontsize=8)
-fig.text(0.65, 0.95, '(B)', fontsize=8)
-fig.text(0.65, 0.5, '(C)', fontsize=8)
+fig.text(0, 0.33, '(B)', fontsize=8)
+fig.text(0.5, 0.33, '(C)', fontsize=8)
 
 
 # Plot the data and fits.
@@ -179,10 +187,10 @@ for i, _ in enumerate(ep_ra):
     _ = ax1.plot(c_range / 1e6, mic_fit[i], ':', color=colors[i + 4])
 
 # Plot the data.
-data = pd.concat([flow_pruned, mic_pruned], axis=0)
+data = pd.concat([flow_samp, mic_samp], axis=0)
 grouped = data.groupby(['method', 'binding_energy'])
 glyph_colors = {-15.3: colors[5], -13.9: colors[4]}
-
+flow_samp
 for g, d in grouped:
     if g[0] == 'flow':
         fill = 'w'
@@ -200,8 +208,8 @@ ax1.set_ylim([-0.05, 1.1])
 
 
 # Plot the posterior distributions
-ka_bins = np.linspace(50, 300, 500)
-ki_bins = np.linspace(0.35, 0.88, 500)
+ka_bins = np.linspace(50, 300, 100)
+ki_bins = np.linspace(0.35, 0.88, 100)
 
 flow_ka_hist, flow_ka_edges = np.histogram(
     np.exp(flow_mcmc_df['ep_a']), bins=ka_bins)
@@ -216,24 +224,30 @@ mic_ki_hist, mic_ki_edges = np.histogram(
     np.exp(mic_mcmc_df['ep_i']), bins=ki_bins)
 mic_ki_hist = mic_ki_hist / np.sum(mic_ki_hist)
 
-ax2.step(ka_bins[:-1], mic_ka_hist, color=colors[2], lw=0.5,
+ax2.step(ka_bins[:-1], mic_ka_hist, color=colors[2], lw=1,
          label='microscopy', alpha=0.75)
-ax2.fill_between(ka_bins[:-1], 0, mic_ka_hist, color=colors[2], alpha=0.5)
+ax2.fill_between(ka_bins[:-1], 0, mic_ka_hist, color=colors[2], alpha=0.5,
+                 step='pre')
 ax2.step(ka_bins[:-1], flow_ka_hist, color=colors[0],
-         lw=0.5, label='flow cytometry', alpha=0.75)
-ax2.fill_between(ka_bins[:-1], 0, flow_ka_hist, color=colors[0], alpha=0.5)
+         lw=1, label='flow\ncytometry', alpha=0.75)
+ax2.fill_between(ka_bins[:-1], 0, flow_ka_hist, color=colors[0], alpha=0.5,
+                 step='pre')
 
-ax2.legend(loc=(0, 0.8), fontsize=6)
+ax2.legend(loc='upper right', fontsize=6, handlelength=1)
 
-ax3.step(ki_bins[:-1], mic_ki_hist, color=colors[2], lw=0.5, alpha=0.75)
-ax3.fill_between(ki_bins[:-1], 0, mic_ki_hist, color=colors[2], alpha=0.5)
+ax3.step(ki_bins[:-1], mic_ki_hist, color=colors[2], lw=1, alpha=0.75)
+ax3.fill_between(ki_bins[:-1], 0, mic_ki_hist, color=colors[2], alpha=0.5,
+                 step='pre')
 
-ax3.step(ki_bins[:-1], flow_ki_hist, color=colors[0], lw=0.5, alpha=0.75)
-ax3.fill_between(ki_bins[:-1], 0, flow_ki_hist, color=colors[0], alpha=0.5)
+ax3.step(ki_bins[:-1], flow_ki_hist, color=colors[0], lw=1, alpha=0.75)
+ax3.fill_between(ki_bins[:-1], 0, flow_ki_hist, color=colors[0], alpha=0.5,
+                 step='pre')
 
-ax2.set_ylim([0, 0.03])
-plt.tight_layout()
+ax2.set_ylim([0, 0.12])
+ax2.set_xlim([50, 300])
+ax3.set_ylim([0, 0.09])
 
 # Save the figure!
+plt.tight_layout()
 plt.savefig('../figs/fig{0}_parameter_estimation.pdf'.format(FIG_NO),
             bbox_inches='tight')

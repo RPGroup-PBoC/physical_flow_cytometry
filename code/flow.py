@@ -6,6 +6,11 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pymc3 as pm
 import scipy.stats
+import skimage.io
+import skimage.morphology
+import skimage.filters
+import skimage.segmentation
+import scipy.ndimage
 
 
 # #######################
@@ -113,7 +118,7 @@ def gauss_interval(df, mu, cov, x_val='FSC-H', y_val='SSC-H', log=False):
     return interval_array
 
 
-def gaussian_gate(df, alpha, x_val='FSC-H', y_val='SSC-H', log=False,
+def gaussian_gate(df, alpha, x_val='FSC-A', y_val='SSC-A', log=True,
                   verbose=False):
     '''
     Function that applies an "unsupervised bivariate Gaussian gate" to the data
