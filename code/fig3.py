@@ -9,7 +9,7 @@ colors = flow.set_plotting_style()
 # %matplotlib inline
 
 ###########
-FIG_NO = 2
+FIG_NO = 3
 ###########
 np.random.seed(42)
 
@@ -249,5 +249,5 @@ ax3.set_ylim([0, 0.09])
 
 # Save the figure!
 plt.tight_layout()
-plt.savefig('../figs/fig{0}_parameter_estimation.pdf'.format(FIG_NO),
+plt.savefig('../figs/fig{0}.pdf'.format(FIG_NO),
             bbox_inches='tight')

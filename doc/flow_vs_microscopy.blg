@@ -1,0 +1,87 @@
+This is BibTeX, Version 0.99d (TeX Live 2016)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: flow_vs_microscopy.aux
+The style file: biblatex.bst
+Reallocated glb_str_ptr (elt_size=4) to 20 items from 10.
+Reallocated global_strs (elt_size=20001) to 20 items from 10.
+Reallocated glb_str_end (elt_size=4) to 20 items from 10.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Database file #1: flow_vs_microscopy-blx.bib
+Database file #2: library.bib
+Biblatex version: 3.3
+Reallocated wiz_functions (elt_size=4) to 9000 items from 6000.
+Name 6 in "Razo-Mejia, Manuel and Barnes, Stephanie L. and Belliveau, Nathan M. and Chure, Griffin and Einav, Tal and Lewis, Mitchell Lewis, and Phillips, Rob" has a comma at the end for entry RazoMejia2017
+while executing---line 2630 of file biblatex.bst
+Name 6 in "Razo-Mejia, Manuel and Barnes, Stephanie L. and Belliveau, Nathan M. and Chure, Griffin and Einav, Tal and Lewis, Mitchell Lewis, and Phillips, Rob" has a comma at the end for entry RazoMejia2017
+while executing---line 2654 of file biblatex.bst
+Name 6 in "Razo-Mejia, Manuel and Barnes, Stephanie L. and Belliveau, Nathan M. and Chure, Griffin and Einav, Tal and Lewis, Mitchell Lewis, and Phillips, Rob" has a comma at the end for entry RazoMejia2017
+while executing---line 2658 of file biblatex.bst
+Name 6 in "Razo-Mejia, Manuel and Barnes, Stephanie L. and Belliveau, Nathan M. and Chure, Griffin and Einav, Tal and Lewis, Mitchell Lewis, and Phillips, Rob" has a comma at the end for entry RazoMejia2017
+while executing---line 2658 of file biblatex.bst
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Name 6 in "Razo-Mejia, Manuel and Barnes, Stephanie L. and Belliveau, Nathan M. and Chure, Griffin and Einav, Tal and Lewis, Mitchell Lewis, and Phillips, Rob" has a comma at the end for entry RazoMejia2017
+while executing---line 2746 of file biblatex.bst
+Name 6 in "Razo-Mejia, Manuel and Barnes, Stephanie L. and Belliveau, Nathan M. and Chure, Griffin and Einav, Tal and Lewis, Mitchell Lewis, and Phillips, Rob" has a comma at the end for entry RazoMejia2017
+while executing---line 2746 of file biblatex.bst
+Name 6 in "Razo-Mejia, Manuel and Barnes, Stephanie L. and Belliveau, Nathan M. and Chure, Griffin and Einav, Tal and Lewis, Mitchell Lewis, and Phillips, Rob" has a comma at the end for entry RazoMejia2017
+while executing---line 2746 of file biblatex.bst
+Name 6 in "Razo-Mejia, Manuel and Barnes, Stephanie L. and Belliveau, Nathan M. and Chure, Griffin and Einav, Tal and Lewis, Mitchell Lewis, and Phillips, Rob" has a comma at the end for entry RazoMejia2017
+while executing---line 2746 of file biblatex.bst
+Name 6 in "Razo-Mejia, Manuel and Barnes, Stephanie L. and Belliveau, Nathan M. and Chure, Griffin and Einav, Tal and Lewis, Mitchell Lewis, and Phillips, Rob" has a comma at the end for entry RazoMejia2017
+while executing---line 2746 of file biblatex.bst
+Name 6 in "Razo-Mejia, Manuel and Barnes, Stephanie L. and Belliveau, Nathan M. and Chure, Griffin and Einav, Tal and Lewis, Mitchell Lewis, and Phillips, Rob" has a comma at the end for entry RazoMejia2017
+while executing---line 2746 of file biblatex.bst
+Name 6 in "Razo-Mejia, Manuel and Barnes, Stephanie L. and Belliveau, Nathan M. and Chure, Griffin and Einav, Tal and Lewis, Mitchell Lewis, and Phillips, Rob" has a comma at the end for entry RazoMejia2017
+while executing---line 2746 of file biblatex.bst
+You've used 7 entries,
+            6256 wiz_defined-function locations,
+            1231 strings with 12911 characters,
+and the built_in function-call counts, 49256 in all, are:
+= -- 3843
+> -- 724
+< -- 138
++ -- 1373
+- -- 287
+* -- 3777
+:= -- 5701
+add.period$ -- 0
+call.type$ -- 7
+change.case$ -- 66
+chr.to.int$ -- 37
+cite$ -- 12
+duplicate$ -- 5008
+empty$ -- 4433
+format.name$ -- 513
+if$ -- 9743
+int.to.chr$ -- 0
+int.to.str$ -- 14
+missing$ -- 0
+newline$ -- 297
+num.names$ -- 256
+pop$ -- 2236
+preamble$ -- 1
+purify$ -- 128
+quote$ -- 0
+skip$ -- 1039
+stack$ -- 0
+substring$ -- 7205
+swap$ -- 1058
+text.length$ -- 153
+text.prefix$ -- 0
+top$ -- 1
+type$ -- 226
+warning$ -- 0
+while$ -- 689
+width$ -- 0
+write$ -- 291
+(There were 11 error messages)

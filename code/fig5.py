@@ -7,7 +7,7 @@ import scipy.stats
 colors = flow.set_plotting_style()
 # %matplotlib inline
 ###############
-FIG_NO = 4
+FIG_NO = 5
 ###############
 
 # %% Load the Flow data set.
@@ -77,7 +77,7 @@ for g, d in grouped:
     _ = ax[0].step(x - x.mean(), y, color=c, alpha=alpha, lw=1.5)
 
     # Compute the centered normalized moments.
-    max_moments = 7
+    max_moments = 5
     moments = [scipy.stats.moment(x, i)
                for i in range(1, max_moments)]
     x_vals = np.arange(1, max_moments) + \
@@ -85,12 +85,11 @@ for g, d in grouped:
     _ = ax[1].plot(x_vals, moments, 'o', color=c, alpha=0.5,
                    ms=4)
 # ax[1].xaxis.grid(False)
-ax[1].set_xticks([1, 2, 3, 4, 5, 6])
-ax[1].set_xlim([1.5, 6.5])
-_ = ax[1].set_xticklabels(['', 'variance', 'skewness', 'kurtosis', 'hyper-\nskewness',
-                           'hyper-\nflatness'])
+ax[1].set_xticks([1, 2, 3, 4, ])
+ax[1].set_xlim([1.5, 4.5])
+_ = ax[1].set_xticklabels(['', 'variance', 'skewness', 'kurtosis'])
 for t in ax[1].xaxis.get_ticklabels():
     t.set_rotation(45)
 plt.tight_layout()
-plt.savefig('../figs/fig{0}_moment_comparison.pdf'.format(FIG_NO),
+plt.savefig('../figs/fig{0}.pdf'.format(FIG_NO),
             bbox_inches='tight')
